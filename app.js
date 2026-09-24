@@ -53,17 +53,20 @@ const app = express();
 
 const allowedOrigins = [
     "http://localhost:5173",
+    process.env.FRONTEND_URL,
+    process.env.CLIENT_URL,
     "https://fixora-frontend-ch0b5gk4g-devs-learners.vercel.app",
-];
+].filter(Boolean);
 
 app.use(
     cors({
         origin: function (origin, callback) {
+            // Allow server-to-server requests and same-origin requests.
             if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
+                return callback(null, true);
             }
+
+            return callback(new Error("Not allowed by CORS"));
         },
         credentials: true,
     })

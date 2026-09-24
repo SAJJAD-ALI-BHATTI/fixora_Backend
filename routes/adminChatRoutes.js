@@ -1,0 +1,10 @@
+const express = require("express");
+const { authenticateUser } = require("../middleware/authMiddleware");
+const { requireRole } = require("../middleware/roleMiddleware");
+const { getAdminConversations, getChatUsers, getOrCreateAdminConversation } = require("../controllers/adminChatController");
+const router = express.Router();
+router.use(authenticateUser, requireRole("admin"));
+router.get("/conversations", getAdminConversations);
+router.get("/users", getChatUsers);
+router.post("/conversations/with/:userId", getOrCreateAdminConversation);
+module.exports = router;

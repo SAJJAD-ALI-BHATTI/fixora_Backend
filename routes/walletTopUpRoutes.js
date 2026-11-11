@@ -1,0 +1,12 @@
+const express = require("express");
+const { authenticateUser } = require("../middleware/authMiddleware");
+const { requireRole } = require("../middleware/roleMiddleware");
+const { bankInstructions, createTopUpRequest, getMyTopUpRequests, getAdminTopUpRequests, reviewTopUpRequest } = require("../controllers/walletTopUpController");
+const router = express.Router();
+router.get("/bank-instructions", bankInstructions);
+router.use(authenticateUser);
+router.get("/mine", requireRole("customer"), getMyTopUpRequests);
+router.post("/", requireRole("customer"), createTopUpRequest);
+router.get("/admin", requireRole("admin"), getAdminTopUpRequests);
+router.patch("/admin/:id/review", requireRole("admin"), reviewTopUpRequest);
+module.exports = router;
